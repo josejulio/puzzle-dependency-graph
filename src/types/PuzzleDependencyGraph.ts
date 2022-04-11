@@ -1,4 +1,4 @@
-import {PuzzleDependencyNode} from "./PuzzleDependencyNode";
+import { PuzzleDependencyNode } from './PuzzleDependencyNode';
 
 class NodeAlreadyExists extends Error {
     public constructor(id: string) {
@@ -14,7 +14,7 @@ class NodeNotFound extends Error {
 
 type NodeOrId = PuzzleDependencyNode | PuzzleDependencyNode['id'];
 
-export class PuzzleDependencyChart {
+export class PuzzleDependencyGraph {
     private readonly nodes: Record<string, Required<PuzzleDependencyNode>>;
 
     public constructor(nodes?: Array<PuzzleDependencyNode>) {
@@ -24,6 +24,7 @@ export class PuzzleDependencyChart {
             for (const node of nodes) {
                 this.addNodeWithValidation(node, false);
             }
+
             this.validateDependencies();
         }
     }
@@ -33,23 +34,39 @@ export class PuzzleDependencyChart {
     }
 
     public addDependency(base: NodeOrId, depends: NodeOrId) {
-        this.findNode(base).depends.push(
-            this.findNode(depends).id
-        );
+        const node = this.findNode(base);
+        const targetId = this.findNode(depends).id;
+
+        if (!node.depends.includes(targetId)) {
+            node.depends.push(targetId);
+        }
+    }
+
+    public addRequiredElement(node: NodeOrId, requires: string) {
+        this.findNode(node).elements.required.push(requires);
+    }
+
+    public addTakenElement(node: NodeOrId, taken: string) {
+        this.findNode(node).elements.taken.push(taken);
+    }
+
+    public addObtainedElement(node: NodeOrId, obtained: string) {
+        this.findNode(node).elements.obtained.push(obtained);
     }
 
     public getNodes(): ReadonlyArray<Required<Readonly<PuzzleDependencyNode>>> {
         return Object.values(this.nodes);
     }
 
-    private findNode(nodeOrId: NodeOrId) {
-        if (typeof nodeOrId === 'string') {
+    public getDictionaryNodes(): Readonly<Record<string, Required<Readonly<PuzzleDependencyNode>>>> {
+        return this.nodes;
+    }
 
-        }
+    private findNode(nodeOrId: NodeOrId) {
         const id = typeof nodeOrId === 'string' ? nodeOrId : nodeOrId.id;
         const found = this.nodes[id];
         if (!found) {
-            throw new NodeNotFound(id)
+            throw new NodeNotFound(id);
         }
 
         return found;
@@ -71,7 +88,13 @@ export class PuzzleDependencyChart {
         // Put defaults for everything
         this.nodes[node.id] = {
             depends: [],
-            ...node
+            ...node,
+            elements: {
+                required: [],
+                taken: [],
+                obtained: [],
+                ...node.elements
+            }
         };
     }
 

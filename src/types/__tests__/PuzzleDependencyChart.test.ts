@@ -1,5 +1,5 @@
-import {PuzzleDependencyChart} from "../PuzzleDependencyChart";
-import {PuzzleDependencyNode} from "../PuzzleDependencyNode";
+import { PuzzleDependencyGraph } from '../PuzzleDependencyGraph';
+import { PuzzleDependencyNode } from '../PuzzleDependencyNode';
 
 describe('PuzzleDependencyChart', () => {
     it('Allows creation with all nodes', () => {
@@ -54,7 +54,7 @@ describe('PuzzleDependencyChart', () => {
             }
         ];
 
-        const chart = new PuzzleDependencyChart(validNodes);
+        const chart = new PuzzleDependencyGraph(validNodes);
         expect(chart).toBeTruthy();
     });
 
@@ -68,11 +68,11 @@ describe('PuzzleDependencyChart', () => {
                 ]
             }
         ];
-        expect(() => new PuzzleDependencyChart(unvalid)).toThrow();
+        expect(() => new PuzzleDependencyGraph(unvalid)).toThrow();
     });
 
     it('Allows to start with nothing and add dependencies', () => {
-        const chart = new PuzzleDependencyChart();
+        const chart = new PuzzleDependencyGraph();
         chart.addNode({
             id: 'unlock-basement-door',
             title: 'Unlock basement door'
@@ -86,18 +86,28 @@ describe('PuzzleDependencyChart', () => {
             {
                 id: 'unlock-basement-door',
                 title: 'Unlock basement door',
-                depends: [ 'find-key' ]
+                depends: [ 'find-key' ],
+                elements: {
+                    required: [],
+                    taken: [],
+                    obtained: []
+                }
             },
             {
                 id: 'find-key',
                 title: 'Find key',
-                depends: []
+                depends: [],
+                elements: {
+                    required: [],
+                    taken: [],
+                    obtained: []
+                }
             }
-        ])
+        ]);
     });
 
     it('Fails if adding a dependency of a node that does not exist', () => {
-        const chart = new PuzzleDependencyChart();
+        const chart = new PuzzleDependencyGraph();
         chart.addNode({
             id: 'unlock-basement-door',
             title: 'Unlock basement door'
