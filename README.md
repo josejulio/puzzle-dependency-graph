@@ -6,7 +6,10 @@ and [Joshua Weinberg](http://thewebsiteisdown.com/twidblog/puzzle-dependency-gra
 - Talk by [Noah Falstein](https://www.gdcvault.com/play/1017978/The-Arcane-Art-of-Puzzle)
 
 The plan is to start with a CLI tool to load and validate the dependencies are valid. It will also
-optionally add some ideas I've to help with the design/validation.
+optionally add some ideas I've to help with the design/validation. 
+
+After the CLI I would like to add a GUI (using [cytoscape](https://js.cytoscape.org/)) for the graph 
+visualization and manipulation.
 
 Should be able to map dependencies:
 
@@ -20,7 +23,7 @@ an item, an event that is required, etc), `taken` and `obtained` elements.
 
 ## Structure of a node in the graph
 
-Below node maps one of t
+Below code maps above graph.
 
 ```typescript
 const graph = [
