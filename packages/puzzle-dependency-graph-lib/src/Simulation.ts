@@ -1,10 +1,11 @@
 import produce from 'immer';
+import { DeepRequired } from 'ts-essentials';
 
-import { PuzzleDependencyGraph } from './PuzzleDependencyGraph';
-import { PuzzleDependencyNode } from './PuzzleDependencyNode';
+import { Graph } from './Graph';
+import { Node } from './Node';
 
 interface State {
-    nodes: Record<string, PuzzleDependencyNode>;
+    nodes: Record<string, DeepRequired<Node>>;
     elements: Array<string>;
     steps: Array<string>;
 }
@@ -18,8 +19,8 @@ export interface SimulateReport {
     }>;
 }
 
-export const simulate = (puzzleChart: PuzzleDependencyGraph): SimulateReport => {
-    const nodes = puzzleChart.getDictionaryNodes();
+export const simulate = (puzzleGraph: Graph): SimulateReport => {
+    const nodes = puzzleGraph.getDictionaryNodes();
     const initialState: State = {
         nodes: { ...nodes },
         elements: [],
@@ -37,7 +38,7 @@ export const simulate = (puzzleChart: PuzzleDependencyGraph): SimulateReport => 
 };
 
 const runSimulation = (state: State, report: SimulateReport) => {
-    const next = nextSteps(state);
+    const next = nextSteps(Object.values(state.nodes));
 
     if (next.length === 0 && Object.values(state.nodes).length > 0) {
         failReport('Dead end found', state, report);
@@ -49,8 +50,10 @@ const runSimulation = (state: State, report: SimulateReport) => {
             failReport(`Dead end found - no elements to transverse to "${step}"`, state, report);
         }
 
+        const nextState = runStep(state, step);
+
         runSimulation(
-            runStep(state, step),
+            nextState,
             report
         );
     }
@@ -67,16 +70,14 @@ const failReport = (description: string, state: State, report: SimulateReport) =
 
 /**
  * This looks for steps that can be performed regarding the dependency chart
- * @param state
+ * @param nodes
+ * @param from
  */
-const nextSteps = (state: State): Array<string> => {
-    const next = Object.values(state.nodes)
+const nextSteps = (nodes: ReadonlyArray<DeepRequired<Node>>, from?: string): Array<string> => {
+    return nodes
+    .filter(n => !from || n.id === from)
     .filter(n => n.depends.length === 0)
     .map(step => step.id);
-        // This should be moved on the run simulation. No dependency means we should be able to do it already
-    // .filter(stepId => canDoStep(state, stepId));
-
-    return next;
 };
 
 /**

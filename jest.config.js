@@ -7,6 +7,6 @@ module.exports = {
         '!**/node_modules/**'
     ],
     roots: [
-        '<rootDir>/src/'
+        '<rootDir>/packages/puzzle-dependency-graph-lib/src'
     ]
 };

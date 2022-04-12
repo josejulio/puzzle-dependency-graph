@@ -1,4 +1,6 @@
-import { PuzzleDependencyNode } from './PuzzleDependencyNode';
+import { DeepRequired } from 'ts-essentials';
+
+import { Node } from './Node';
 
 class NodeAlreadyExists extends Error {
     public constructor(id: string) {
@@ -12,12 +14,12 @@ class NodeNotFound extends Error {
     }
 }
 
-type NodeOrId = PuzzleDependencyNode | PuzzleDependencyNode['id'];
+type NodeOrId = Node | Node['id'];
 
-export class PuzzleDependencyGraph {
-    private readonly nodes: Record<string, Required<PuzzleDependencyNode>>;
+export class Graph {
+    private readonly nodes: Record<string, DeepRequired<Node>>;
 
-    public constructor(nodes?: Array<PuzzleDependencyNode>) {
+    public constructor(nodes?: Array<Node>) {
         this.nodes = {};
 
         if (nodes) {
@@ -29,7 +31,7 @@ export class PuzzleDependencyGraph {
         }
     }
 
-    public addNode(node: PuzzleDependencyNode) {
+    public addNode(node: Node) {
         this.addNodeWithValidation(node, true);
     }
 
@@ -54,15 +56,15 @@ export class PuzzleDependencyGraph {
         this.findNode(node).elements.obtained.push(obtained);
     }
 
-    public getNodes(): ReadonlyArray<Required<Readonly<PuzzleDependencyNode>>> {
+    public getNodes(): ReadonlyArray<DeepRequired<Readonly<Node>>> {
         return Object.values(this.nodes);
     }
 
-    public getDictionaryNodes(): Readonly<Record<string, Required<Readonly<PuzzleDependencyNode>>>> {
+    public getDictionaryNodes(): Readonly<Record<string, DeepRequired<Readonly<Node>>>> {
         return this.nodes;
     }
 
-    private findNode(nodeOrId: NodeOrId) {
+    private findNode(nodeOrId: NodeOrId): DeepRequired<Node> {
         const id = typeof nodeOrId === 'string' ? nodeOrId : nodeOrId.id;
         const found = this.nodes[id];
         if (!found) {
@@ -72,7 +74,7 @@ export class PuzzleDependencyGraph {
         return found;
     }
 
-    private addNodeWithValidation(node: PuzzleDependencyNode, validateDependents: boolean) {
+    private addNodeWithValidation(node: Node, validateDependents: boolean) {
         if (this.nodes[node.id]) {
             throw new NodeAlreadyExists(node.id);
         }

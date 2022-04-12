@@ -1,10 +1,11 @@
-import { PuzzleDependencyGraph } from '../PuzzleDependencyGraph';
-import { PuzzleDependencyNode } from '../PuzzleDependencyNode';
-import { simulate } from '../PuzzleSimulation';
+import { theDigNodes } from '../__fixtures__/the-dig';
+import { Graph } from '../Graph';
+import { Node } from '../Node';
+import { simulate } from '../Simulation';
 
 describe('PuzzleSimulation', () => {
     it('Succeeds on simple case (no elements)', ()=> {
-        const validNodes: Array<PuzzleDependencyNode> = [
+        const validNodes: Array<Node> = [
             {
                 id: 'break-window',
                 title: 'Break window',
@@ -55,12 +56,12 @@ describe('PuzzleSimulation', () => {
             }
         ];
 
-        const chart = new PuzzleDependencyGraph(validNodes);
+        const chart = new Graph(validNodes);
         expect(simulate(chart).success).toEqual(true);
     });
 
     it('Simple dead end', () => {
-        const chart = new PuzzleDependencyGraph([
+        const chart = new Graph([
             {
                 id: 'use-chainsaw',
                 title: 'Use chain saw',
@@ -85,7 +86,7 @@ describe('PuzzleSimulation', () => {
     });
 
     it('More complicated dead ends', () => {
-        const validNodes: Array<PuzzleDependencyNode> = [
+        const validNodes: Array<Node> = [
             {
                 id: 'break-window',
                 title: 'Break window',
@@ -139,7 +140,7 @@ describe('PuzzleSimulation', () => {
             }
         ];
 
-        const chart = new PuzzleDependencyGraph(validNodes);
+        const chart = new Graph(validNodes);
 
         const result = simulate(chart);
 
@@ -148,5 +149,11 @@ describe('PuzzleSimulation', () => {
         result.messages.every(m => {
             expect(m.description).toEqual('Dead end found - no elements to transverse to "unlock-basement-door"');
         });
+    });
+
+    it('Tests The Dig', () => {
+        const chart = new Graph(theDigNodes);
+        const result = simulate(chart);
+        expect(result.success).toBe(true);
     });
 });

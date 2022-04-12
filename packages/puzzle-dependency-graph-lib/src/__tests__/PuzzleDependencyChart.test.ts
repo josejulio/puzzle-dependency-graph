@@ -1,9 +1,9 @@
-import { PuzzleDependencyGraph } from '../PuzzleDependencyGraph';
-import { PuzzleDependencyNode } from '../PuzzleDependencyNode';
+import { Graph } from '../Graph';
+import { Node } from '../Node';
 
 describe('PuzzleDependencyChart', () => {
     it('Allows creation with all nodes', () => {
-        const validNodes: Array<PuzzleDependencyNode> = [
+        const validNodes: Array<Node> = [
             {
                 id: 'break-window',
                 title: 'Break window',
@@ -54,12 +54,12 @@ describe('PuzzleDependencyChart', () => {
             }
         ];
 
-        const chart = new PuzzleDependencyGraph(validNodes);
+        const chart = new Graph(validNodes);
         expect(chart).toBeTruthy();
     });
 
     it('Fails if there are broken dependencies', () => {
-        const unvalid: Array<PuzzleDependencyNode> = [
+        const unvalid: Array<Node> = [
             {
                 id: 'a',
                 title: 'A',
@@ -68,11 +68,11 @@ describe('PuzzleDependencyChart', () => {
                 ]
             }
         ];
-        expect(() => new PuzzleDependencyGraph(unvalid)).toThrow();
+        expect(() => new Graph(unvalid)).toThrow();
     });
 
     it('Allows to start with nothing and add dependencies', () => {
-        const chart = new PuzzleDependencyGraph();
+        const chart = new Graph();
         chart.addNode({
             id: 'unlock-basement-door',
             title: 'Unlock basement door'
@@ -107,7 +107,7 @@ describe('PuzzleDependencyChart', () => {
     });
 
     it('Fails if adding a dependency of a node that does not exist', () => {
-        const chart = new PuzzleDependencyGraph();
+        const chart = new Graph();
         chart.addNode({
             id: 'unlock-basement-door',
             title: 'Unlock basement door'

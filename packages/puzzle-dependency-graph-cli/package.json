@@ -1,0 +1,28 @@
+{
+  "name": "puzzle-dependency-graph-cli",
+  "version": "1.0.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "bin": {
+    "lock-dependencies": "./lib/main.js"
+  },
+  "files": [
+    "lib/*"
+  ],
+  "scripts": {
+    "build": "rollup --config",
+    "ci": "npm-run-all build lint 'test --coverage --forceExit --maxWorkers=4 --detectOpenHandles'",
+    "lint": "eslint --ext js,ts,tsx src",
+    "lint:fix": "eslint --ext js,ts,tsx src --fix",
+    "test": "jest --verbose"
+  },
+  "dependencies": {
+    "cli-progress": "3.8.2",
+    "commander": "6.1.0",
+    "puzzle-dependency-graph-lib": "1.0.0",
+    "ts-graphviz": "0.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

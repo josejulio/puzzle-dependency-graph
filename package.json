@@ -1,25 +1,21 @@
 {
-  "name": "puzzle-dependency-chart",
+  "private": true,
+  "name": "puzzle-dependency-graph",
   "version": "0.0.0-dev",
-  "private": false,
   "license": "Apache-2.0",
   "bin": {
     "lock-dependencies": "./lib/main.js"
   },
-  "files": [
-    "lib/*"
+  "workspaces": [
+    "packages/puzzle-dependency-graph-cli",
+    "packages/puzzle-dependency-graph-lib"
   ],
   "scripts": {
-    "build": "rollup --config",
-    "ci": "npm-run-all build lint 'test --coverage --forceExit --maxWorkers=4 --detectOpenHandles'",
-    "lint": "eslint --ext js,ts,tsx src",
-    "lint:fix": "eslint --ext js,ts,tsx src --fix",
+    "build": "yarn build:lib && yarn build:cli",
+    "build:lib": "tsc packages/puzzle-dependency-graph-lib/src/*.ts",
+    "build:cli": "tsc packages/puzzle-dependency-graph-cli/src/*.ts",
+    "lint": "eslint --ext js,ts,tsx packages/**/src",
     "test": "jest --verbose"
-  },
-  "dependencies": {
-    "cli-progress": "3.8.2",
-    "commander": "6.1.0",
-    "immer": "9.0.12"
   },
   "devDependencies": {
     "@types/jest": "26.0.14",
@@ -30,6 +26,7 @@
     "eslint-plugin-jest": "24.1.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "26.5.2",
+    "ts-essentials": "^9.1.2",
     "ts-jest": "26.4.1",
     "typescript": "4.0.3"
   },
