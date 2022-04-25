@@ -7,6 +7,7 @@ import { getCommand } from './Command';
 export interface Options {
     graphviz: boolean;
     input: string;
+    graphvizDirection
 }
 
 export const execute = async (options: Options) => {
@@ -26,7 +27,7 @@ export const execute = async (options: Options) => {
 
     if (options.graphviz) {
         const graphviz = digraph('puzzle-dependency-graph', {
-            rankdir: 'LR'
+            rankdir: options.graphvizDirection
         });
         const graphvizNodes: Record<string, INode> = {};
 
@@ -43,7 +44,7 @@ export const execute = async (options: Options) => {
             }
         }
 
-        toDot(graphviz);
+        console.log(toDot(graphviz));
     }
 };
 

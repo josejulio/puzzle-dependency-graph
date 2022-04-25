@@ -17,6 +17,11 @@ export const getCommand = () => {
         'Outputs a graphviz representation of the puzzle',
         false
     )
+    .option(
+        '-gd, --graphviz-direction <graph-direction LR|TB>',
+        'Passed to graphviz to configure the graph direction e.g. (LR left to right, TB top to bottom, etc)',
+        'LR'
+    )
     .requiredOption(
         '-i, --input <puzzle-dependency-graph-array>',
         'Input file'

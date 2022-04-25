@@ -4,7 +4,7 @@
   "private": false,
   "license": "Apache-2.0",
   "bin": {
-    "lock-dependencies": "./lib/main.js"
+    "puzzle-dependency-graph": "./src/Main.js"
   },
   "files": [
     "lib/*"
